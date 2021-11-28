@@ -47,59 +47,53 @@ package leetcode.editor.cn;
 // Related Topics 哈希表 字符串 滑动窗口 
 // 👍 6483 👎 0
 
-class LongestSubstringWithoutRepeatingCharacters{
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+class LongestSubstringWithoutRepeatingCharacters {
     public static void main(String[] args) {
         Solution solution = new LongestSubstringWithoutRepeatingCharacters().new Solution();
         int pwwkew = solution.lengthOfLongestSubstring("abcabcbb");
         System.out.println(pwwkew);
     }
 
-//leetcode submit region begin(Prohibit modification and deletion)
-class Solution {
-    public int lengthOfLongestSubstring(String s) {
-        if (s.length() == 0) {
-            return 0;
-        }
-        int[] temp = new int[s.length()];
-        int i, j, len;
-        temp[0] = 0;
-        for (i = 1, j = 0, len = 0; i < s.length(); i++) {
-            while (j < s.length() && s.charAt(i) == s.charAt(j)) {
-                j++;
-                len++;
+    //leetcode submit region begin(Prohibit modification and deletion)
+    class Solution {
+        public int lengthOfLongestSubstring(String s) {
+/*            HashMap<Character, Integer> map = new HashMap<>();
+            int max = 0, start = 0;
+            for (int end = 0; end < s.length(); end++) {
+                char ch = s.charAt(end);
+                if (map.containsKey(ch)) {
+                    start = Math.max(map.get(ch) + 1, start);
+                }
+                max = Math.max(max, end - start + 1);
+                map.put(ch, end);
             }
-            temp[i] = len;
-            j = i;
-        }
-        int min = 1;
-        for (int value : temp) {
-            if (min < value) {
-                min = value;
+            return max;*/
+
+            // 哈希集合，记录每个字符是否出现过
+            Set<Character> occ = new HashSet<Character>();
+            int n = s.length();
+            // 右指针，初始值为 -1，相当于我们在字符串的左边界的左侧，还没有开始移动
+            int rk = -1, ans = 0;
+            for (int i = 0; i < n; ++i) {
+                if (i != 0) {
+                    // 左指针向右移动一格，移除一个字符
+                    occ.remove(s.charAt(i - 1));
+                }
+                while (rk + 1 < n && !occ.contains(s.charAt(rk + 1))) {
+                    // 不断地移动右指针
+                    occ.add(s.charAt(rk + 1));
+                    ++rk;
+                }
+                // 第 i 到 rk 个字符是一个极长的无重复字符子串
+                ans = Math.max(ans, rk - i + 1);
             }
+            return ans;
         }
-        return min;
-
-/*        // 记录字符上一次出现的位置
-        int[] last = new int[128];
-        for(int i = 0; i < 128; i++) {
-            last[i] = -1;
-        }
-        int n = s.length();
-
-        int res = 0;
-        int start = 0; // 窗口开始位置
-        for(int i = 0; i < n; i++) {
-            int index = s.charAt(i);
-            start = Math.max(start, last[index] + 1);
-            res   = Math.max(res, i - start + 1);
-            last[index] = i;
-        }
-
-        return res;*/
-
-
     }
-}
 //leetcode submit region end(Prohibit modification and deletion)
 
 }
